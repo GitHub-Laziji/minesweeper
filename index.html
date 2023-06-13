@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .board {
+            user-select: none;
+        }
+
+        .box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box-init {
+            background: #aaaaaa;
+        }
+
+        .box-open {
+            background: #ffffff;
+        }
+
+        .box-mine {
+            background: red;
+        }
+    </style>
+</head>
+
+<body style="margin: 0;padding: 0;">
+    <div id="app">
+        <div style="display: flex;">
+            <div class="board" @mousedown="onMouseDown" @mouseup="onMouseUp"
+                @contextmenu.prevent="e=>e.preventDefault()">
+                <div v-for="row of map" style="display: flex;">
+                    <div v-for="col of row" class="box"
+                        :class="{'box-init':col.status=='INIT'||col.status=='FLAG','box-open':col.status=='OPEN'}">
+                        <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
+                            style="color:red">{{col.aroundNum}}</span>
+                        <template v-if="status=='WIN'">
+                            <span v-if="col.mine" style="color:red">F</span>
+                        </template>
+                        <template v-else-if="status=='LOSE'">
+                            <span v-if="col.mine" style="color:red">雷</span>
+                        </template>
+                        <template v-else>
+                            <span v-if="col.status=='FLAG'" style="color:red">F</span>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    map: [],
+                    w: null,
+                    h: null,
+                    n: null,
+                    status: "RUNNING",
+                    openNum: 0,
+                    mouse: {
+                        x: null,
+                        y: null,
+                        buttons: 0
+                    }
+                }
+            },
+            mounted() {
+                this.init(16, 16, 20);
+            },
+            methods: {
+                init(w, h, n) {
+                    this.w = w;
+                    this.h = h;
+                    this.n = n;
+                    let random = [];
+                    for (let i = 0; i < w * h; i++) {
+                        random.push({ x: i % w, y: Math.floor(i / w), o: Math.random() });
+                    }
+                    random.sort((a, b) => a.o - b.o);
+                    this.map = [];
+                    for (let y = 0; y < h; y++) {
+                        this.map[y] = [];
+                        for (let x = 0; x < w; x++) {
+                            this.map[y][x] = { x, y, status: "INIT", mine: false, aroundNum: 0 };
+                        }
+                    }
+                    for (let i = 0; i < n; i++) {
+                        let { x, y } = random[i];
+                        this.map[y][x].mine = true;
+                        for (let dy = -1; dy <= 1; dy++) {
+                            for (let dx = -1; dx <= 1; dx++) {
+                                if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= w || y + dy < 0 || y + dy >= h) {
+                                    continue;
+                                }
+                                this.map[y + dy][x + dx].aroundNum++;
+                            }
+                        }
+                    }
+                    this.status = "RUNNING";
+                    this.openNum = 0;
+                },
+                onMouseDown(e) {
+                    if (this.status != "RUNNING") {
+                        return;
+                    }
+                    this.mouse.buttons = e.buttons;
+                },
+                onMouseUp(e) {
+                    if (this.status != "RUNNING") {
+                        return;
+                    }
+                    if (e.buttons == 0) {
+                        let x = Math.floor(e.clientX / 20);
+                        let y = Math.floor(e.clientY / 20);
+                        this.mouse.x = x;
+                        this.mouse.y = y;
+                        if (this.mouse.buttons == 1) {
+                            this.open(x, y);
+                        }
+                        if (this.mouse.buttons == 2) {
+                            if (this.map[y][x].status == "INIT") {
+                                this.map[y][x].status = "FLAG";
+                            } else if (this.map[y][x].status == "FLAG") {
+                                this.map[y][x].status = "INIT";
+                            }
+                        }
+                        if (this.mouse.buttons == 3) {
+                            if (this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
+                                let flagNum = 0;
+                                for (let dy = -1; dy <= 1; dy++) {
+                                    for (let dx = -1; dx <= 1; dx++) {
+                                        if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
+                                            continue;
+                                        }
+                                        if (this.map[y + dy][x + dx].status == "FLAG") {
+                                            flagNum++;
+                                        }
+                                    }
+                                }
+                                console.log(flagNum, this.map[y][x])
+                                if (this.map[y][x].aroundNum == flagNum) {
+                                    for (let dy = -1; dy <= 1; dy++) {
+                                        for (let dx = -1; dx <= 1; dx++) {
+                                            if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
+                                                continue;
+                                            }
+                                            if (this.map[y + dy][x + dx].status != "FLAG") {
+                                                this.open(x + dx, y + dy);
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                            console.log("LR");
+                        }
+                    }
+                },
+                open(x, y) {
+                    if (this.map[y][x].status != "OPEN") {
+                        let que = [{ x, y }];
+                        let dp = new Set();
+                        while (que.length) {
+                            let { x, y } = que.shift();
+                            if (dp.has(y * this.w + x)) {
+                                continue;
+                            }
+                            dp.add(y * this.w + x);
+                            this.map[y][x].status = "OPEN";
+                            this.openNum++;
+                            if (!this.map[y][x].mine && this.map[y][x].aroundNum == 0) {
+                                for (let dy = -1; dy <= 1; dy++) {
+                                    for (let dx = -1; dx <= 1; dx++) {
+                                        if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
+                                            continue;
+                                        }
+                                        que.push({ y: y + dy, x: x + dx });
+                                    }
+                                }
+                            }
+                        }
+                        if (this.map[y][x].mine) {
+                            this.status = "LOSE";
+                            setTimeout(() => alert("失败"), 0);
+                            return;
+                        }
+
+                        if (this.openNum == this.w * this.h - this.n) {
+                            this.status = "WIN";
+                            setTimeout(() => alert("胜利"), 0);
+                            return;
+                        }
+                    }
+                }
+            }
+        }).mount("#app");
+    </script>
+</body>
+
+</html>
