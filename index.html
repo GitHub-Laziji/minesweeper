@@ -80,7 +80,7 @@
                 }
             },
             mounted() {
-                this.init(16, 16, 20);
+                this.init(16, 16, 10);
             },
             methods: {
                 init(w, h, n) {
@@ -102,14 +102,7 @@
                     for (let i = 0; i < n; i++) {
                         let { x, y } = random[i];
                         this.map[y][x].mine = true;
-                        for (let dy = -1; dy <= 1; dy++) {
-                            for (let dx = -1; dx <= 1; dx++) {
-                                if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= w || y + dy < 0 || y + dy >= h) {
-                                    continue;
-                                }
-                                this.map[y + dy][x + dx].aroundNum++;
-                            }
-                        }
+                        this.aroundForeach(x, y, (cx, cy, c) => c.aroundNum++);
                     }
                     this.status = "RUNNING";
                     this.openNum = 0;
@@ -142,32 +135,11 @@
                         if (this.mouse.buttons == 3) {
                             if (this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
                                 let flagNum = 0;
-                                for (let dy = -1; dy <= 1; dy++) {
-                                    for (let dx = -1; dx <= 1; dx++) {
-                                        if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
-                                            continue;
-                                        }
-                                        if (this.map[y + dy][x + dx].status == "FLAG") {
-                                            flagNum++;
-                                        }
-                                    }
-                                }
-                                console.log(flagNum, this.map[y][x])
+                                this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
                                 if (this.map[y][x].aroundNum == flagNum) {
-                                    for (let dy = -1; dy <= 1; dy++) {
-                                        for (let dx = -1; dx <= 1; dx++) {
-                                            if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
-                                                continue;
-                                            }
-                                            if (this.map[y + dy][x + dx].status != "FLAG") {
-                                                this.open(x + dx, y + dy);
-                                            }
-
-                                        }
-                                    }
+                                    this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cy, cx) : null);
                                 }
                             }
-                            console.log("LR");
                         }
                     }
                 },
@@ -184,14 +156,7 @@
                             this.map[y][x].status = "OPEN";
                             this.openNum++;
                             if (!this.map[y][x].mine && this.map[y][x].aroundNum == 0) {
-                                for (let dy = -1; dy <= 1; dy++) {
-                                    for (let dx = -1; dx <= 1; dx++) {
-                                        if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
-                                            continue;
-                                        }
-                                        que.push({ y: y + dy, x: x + dx });
-                                    }
-                                }
+                                this.aroundForeach(x, y, (cx, cy, c) => que.push({ y: cy, x: cx }));
                             }
                         }
                         if (this.map[y][x].mine) {
@@ -199,11 +164,20 @@
                             setTimeout(() => alert("失败"), 0);
                             return;
                         }
-
                         if (this.openNum == this.w * this.h - this.n) {
                             this.status = "WIN";
                             setTimeout(() => alert("胜利"), 0);
                             return;
+                        }
+                    }
+                },
+                aroundForeach(x, y, handle) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        for (let dx = -1; dx <= 1; dx++) {
+                            if (dx == 0 && dy == 0 || x + dx < 0 || x + dx >= this.w || y + dy < 0 || y + dy >= this.h) {
+                                continue;
+                            }
+                            handle(x + dx, y + dy, this.map[y + dy][x + dx]);
                         }
                     }
                 }
