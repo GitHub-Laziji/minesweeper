@@ -74,9 +74,53 @@
         }
 
         .toolbar-msg {
-            width: 80px;
+            width: 54px;
             height: 30px;
             background: #333333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .digital-v {
+            position: absolute;
+            display: flex;
+        }
+
+        .digital-h {
+            position: absolute;
+        }
+
+        .digital-b-l {
+            border-top-color: #00000000 !important;
+            border-bottom-color: #00000000 !important;
+            border-style: solid !important;
+            border-left-width: 0px !important;
+            height: 100%;
+        }
+
+        .digital-b-r {
+            border-top-color: #00000000 !important;
+            border-bottom-color: #00000000 !important;
+            border-style: solid !important;
+            border-right-width: 0px !important;
+            height: 100%;
+        }
+
+        .digital-b-t {
+            border-left-color: #00000000 !important;
+            border-right-color: #00000000 !important;
+            border-style: solid !important;
+            border-top-width: 0px !important;
+            width: 100%;
+        }
+
+        .digital-b-b {
+            border-left-color: #00000000 !important;
+            border-right-color: #00000000 !important;
+            border-style: solid !important;
+            border-bottom-width: 0px !important;
+            width: 100%;
         }
     </style>
 </head>
@@ -86,55 +130,13 @@
         <div class="main">
             <div class="toolbar-border">
                 <div class="toolbar" :style="{'width':boardW+'px'}">
-                    <div class="toolbar-msg"></div>
+                    <div class="toolbar-msg">
+                        <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055" :value="28"></digital>
+                    </div>
                     <div class="toolbar-btn" @click="init(16, 16, 10)">
-                        <template v-if="status=='WIN'">
-                            <svg t="1686670786770" viewBox="0 0 1024 1024" version="1.1"
-                                xmlns="http://www.w3.org/2000/svg" p-id="5786" width="24" height="24">
-                                <path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15"
-                                    p-id="5787"></path>
-                                <path
-                                    d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z"
-                                    fill="#231815" p-id="5788"></path>
-                                <path
-                                    d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z"
-                                    fill="#231815" p-id="5789"></path>
-                                <path
-                                    d="M512.011 706.218c79.08 0 145.727-53.231 166.063-125.817 6.554-23.394-10.835-46.623-35.13-46.623H381.068c-23.959 0-41.692 22.74-35.337 45.841 20.075 72.985 86.917 126.599 166.28 126.599z"
-                                    fill="#FFFFFF" p-id="5790"></path>
-                            </svg>
-                        </template>
-                        <template v-else-if="status=='LOSE'">
-                            <svg t="1686670839646" viewBox="0 0 1024 1024" version="1.1"
-                                xmlns="http://www.w3.org/2000/svg" p-id="5944" width="24" height="24s">
-                                <path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15"
-                                    p-id="5945"></path>
-                                <path
-                                    d="M405.619 461.477l-81.178-21.859c-14.87-4.004-23.761-19.447-19.757-34.317 4.004-14.87 19.447-23.761 34.317-19.757l81.178 21.859c14.87 4.004 23.761 19.447 19.757 34.317-4.004 14.871-19.446 23.762-34.317 19.757zM618.381 461.477l81.178-21.859c14.87-4.004 23.761-19.447 19.757-34.317-4.004-14.87-19.447-23.761-34.317-19.757l-81.178 21.859c-14.87 4.004-23.761 19.447-19.757 34.317 4.004 14.871 19.446 23.762 34.317 19.757z"
-                                    fill="#231815" p-id="5946"></path>
-                                <path
-                                    d="M400.162 637.011a24.894 24.894 0 0 1-15.746-5.595c-10.718-8.704-12.35-24.449-3.646-35.167 32.651-40.204 81.055-63.263 132.798-63.263 49.543 0 96.608 21.465 129.126 58.892 9.056 10.422 7.948 26.213-2.475 35.269-10.423 9.057-26.213 7.948-35.269-2.476-23.017-26.491-56.324-41.685-91.382-41.685-36.615 0-70.872 16.323-93.986 44.784-4.939 6.084-12.149 9.241-19.42 9.241z"
-                                    fill="#FFFFFF" p-id="5947"></path>
-                            </svg>
-                        </template>
-                        <template v-else>
-                            <svg t="1686668882410" viewBox="0 0 1024 1024" version="1.1"
-                                xmlns="http://www.w3.org/2000/svg" p-id="5700" id="mx_n_1686668882411" width="24"
-                                height="24">
-                                <path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15"
-                                    p-id="5701">
-                                </path>
-                                <path
-                                    d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z"
-                                    fill="#231815" p-id="5702"></path>
-                                <path
-                                    d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z"
-                                    fill="#231815" p-id="5703"></path>
-                                <path
-                                    d="M510.431 637.01c-49.543 0-96.608-21.465-129.126-58.892-9.056-10.422-7.948-26.212 2.475-35.269 10.423-9.057 26.213-7.948 35.269 2.475 23.018 26.492 56.325 41.686 91.383 41.686 36.615 0 70.872-16.323 93.986-44.784 8.704-10.718 24.448-12.351 35.167-3.646 10.718 8.704 12.35 24.449 3.646 35.167-32.653 40.204-81.057 63.263-132.8 63.263z"
-                                    fill="#FFFFFF" p-id="5704"></path>
-                            </svg>
-                        </template>
+                        <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
+                        <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
+                        <icon-satisfied-face v-else></icon-satisfied-face>
                     </div>
                     <div class="toolbar-msg"></div>
                 </div>
@@ -149,41 +151,13 @@
                             <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
                                 :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
                             <template v-if="status=='WIN'">
-                                <span v-if="col.mine">
-                                    <svg t="1686667343748" viewBox="0 0 1024 1024" version="1.1"
-                                        xmlns="http://www.w3.org/2000/svg" p-id="3869"
-                                        data-spm-anchor-id="a313x.7781069.0.i2" width="14" height="14">
-                                        <path
-                                            d="M215.4 160.6H177c-8.9 0-16 7.2-16 16V849c0 8.9 7.2 16 16 16h38.4c8.9 0 16-7.2 16-16V176.7c0.1-8.9-7.1-16.1-16-16.1zM848.1 236c-189 152.5-378-180.6-567.1-28.2-8.8 7.1-16 21.3-16 30.1v430.9c0 8.9 7.2 9 16 1.9 189-152.5 378.1 180.7 567.1 28.2 8.9-7.1 16-21.3 16-30.1V237.9c0.1-8.8-7.1-9-16-1.9z"
-                                            fill="#d81e06" p-id="3870" data-spm-anchor-id="a313x.7781069.0.i1"
-                                            class="selected"></path>
-                                    </svg>
-                                </span>
+                                <icon-flag v-if="col.mine" size="14"></icon-flag>
                             </template>
                             <template v-else-if="status=='LOSE'">
-                                <span v-if="col.mine">
-                                    <svg t="1686667579057" viewBox="0 0 1024 1024" version="1.1"
-                                        xmlns="http://www.w3.org/2000/svg" p-id="1328" width="14" height="14">
-                                        <path
-                                            d="M978.74 73.2c16.22 7.93 30.85 14.53 44.71 21.22-42.2 90.06-159.05 106.1-225.73 33.4-11.87-12.68-21.51-26.45-34.04-38.43-47.83-45.14-117.01-28.86-141.16 34.47 19.06 8.17 38.9 16.25 58.22 25.16 32.22 14.34 42.46 37.33 28.78 69.84-10.33 25.7-26.44 39.43-39.3 67.53-73.07-61.8-148.72-89.88-245.43-101.44 14.45-32.6 23.09-57.54 37.84-86.61 10.98-20.84 33.14-27.32 58.14-19.15 15.83 5.03 31.17 12.31 48.67 19.29 4.69-8.51 9.32-17.04 14.08-24.81C629.72-2.5 733.2-16.96 797.47 44.61c10.72 10.05 20.12 20.9 29.39 31.92 49.13 54.57 104.69 53.74 151.88-3.33z m0 0"
-                                            fill="#4C4C4C" p-id="1329"></path>
-                                        <path
-                                            d="M395.34 204.49C178.9 204.49 3.45 379.95 3.45 596.38c0 216.43 175.45 391.89 391.89 391.89s391.89-175.45 391.89-391.89c0-216.43-175.46-391.89-391.89-391.89z m-14.08 742.76c-0.39 0.09-0.6 0.13-0.6 0.13 0.21-0.04 0.4-0.08 0.6-0.13 13.31-2.9 247.66-58.02 338.34-368.44 0.01 0.01 69.65 284.07-338.34 368.44z"
-                                            fill="#4C4C4C" p-id="1330"></path>
-                                    </svg>
-                                </span>
+                                <icon-mine v-if="col.mine" size="14"></icon-mine>
                             </template>
                             <template v-else>
-                                <span v-if="col.status=='FLAG'">
-                                    <svg t="1686667343748" viewBox="0 0 1024 1024" version="1.1"
-                                        xmlns="http://www.w3.org/2000/svg" p-id="3869"
-                                        data-spm-anchor-id="a313x.7781069.0.i2" width="14" height="14">
-                                        <path
-                                            d="M215.4 160.6H177c-8.9 0-16 7.2-16 16V849c0 8.9 7.2 16 16 16h38.4c8.9 0 16-7.2 16-16V176.7c0.1-8.9-7.1-16.1-16-16.1zM848.1 236c-189 152.5-378-180.6-567.1-28.2-8.8 7.1-16 21.3-16 30.1v430.9c0 8.9 7.2 9 16 1.9 189-152.5 378.1 180.7 567.1 28.2 8.9-7.1 16-21.3 16-30.1V237.9c0.1-8.8-7.1-9-16-1.9z"
-                                            fill="#d81e06" p-id="3870" data-spm-anchor-id="a313x.7781069.0.i1"
-                                            class="selected"></path>
-                                    </svg>
-                                </span>
+                                <icon-flag v-if="col.status=='FLAG'" size="14"></icon-flag>
                             </template>
                         </div>
                     </div>
@@ -191,9 +165,45 @@
             </div>
         </div>
     </div>
+    <div id="digital">
+        <div style="display: flex;">
+            <div v-for="(v,i) of vs" :key="i"
+                :style="{'width':w+'px',height:w*1.8+'px','margin-left':(i>0?w*0.2:0)+'px','position': 'relative'}">
+                <div class="digital-h" :style="{'width': w*0.76+'px','top':0+'px','left':w*0.12+'px'}">
+                    <div class="digital-b-t" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-b" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':0+'px'}">
+                    <div class="digital-b-l" :style="{'border-color': [0].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-r" :style="{'border-color': [0].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':w*0.8+'px'}">
+                    <div class="digital-b-l" :style="{'border-color': [0,1,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-r" :style="{'border-color': [0,1,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+                <div class="digital-h" :style="{'width': w*0.76+'px','top':w*0.8+'px','left':w*0.12+'px'}">
+                    <div class="digital-b-t" :style="{'border-color': [2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-b" :style="{'border-color': [2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':0+'px'}">
+                    <div class="digital-b-l" :style="{'border-color': [0,2].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-r" :style="{'border-color': [0,2].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':w*0.8+'px'}">
+                    <div class="digital-b-l" :style="{'border-color': [0,1,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-r" :style="{'border-color': [0,1,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+                <div class="digital-h" :style="{'width': w*0.76+'px','top':w*1.6+'px','left':w*0.12+'px'}">
+                    <div class="digital-b-t" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-b" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
     <script>
-        Vue.createApp({
+        const app = Vue.createApp({
             data() {
                 const numColor = ["#FFFFFF", "#0002F4", "#367922", "#E43222", "#020082", "#7E1D19", "#7E1D19", "#7E1D19", "#7E1D19"];
                 const boxW = 20;
@@ -319,7 +329,78 @@
                     }
                 }
             }
-        }).mount("#app");
+        });
+        app.component("digital", {
+            props: { width: Number, length: Number, activeColor: String, inactiveColor: String, value: Number },
+            template: document.querySelector("#digital").innerHTML,
+            data() {
+                return {
+                    l: 1,
+                    w: 16,
+                    ac: "red",
+                    iac: "#00000000",
+                    vs: [0, 0],
+                    maxValue: 0
+                }
+            },
+            watch: {
+                value(n, o) {
+                    this.initVs(n);
+                }
+            },
+            mounted() {
+                this.l = this.length <= 0 ? 1 : this.length;
+                this.w = this.width <= 0 ? 16 : this.width;
+                this.ac = this.activeColor;
+                this.iac = this.inactiveColor;
+                this.maxValue = Math.pow(10, this.l) - 1;
+                this.initVs(this.value);
+            },
+            methods: {
+                initVs(value) {
+                    this.vs = [];
+                    if (value < 0) {
+                        value = 0;
+                    }
+                    if (value > this.maxValue) {
+                        value = this.maxValue;
+                    }
+                    this.vs = [];
+                    while (value > 0) {
+                        this.vs.unshift(value % 10);
+                        value = Math.floor(value / 10);
+                    }
+                    while (this.vs.length < this.l) {
+                        this.vs.unshift(0);
+                    }
+                }
+            }
+        });
+        app.component("icon-satisfied-face", {
+            props: { size: String },
+            template: `<svg t="1686833504851" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2611" :width="size" :height="size"><path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15" p-id="2612"></path><path d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815" p-id="2613"></path><path d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815" p-id="2614"></path><path d="M510.431 637.01c-49.543 0-96.608-21.465-129.126-58.892-9.056-10.422-7.948-26.212 2.475-35.269 10.423-9.057 26.213-7.948 35.269 2.475 23.018 26.492 56.325 41.686 91.383 41.686 36.615 0 70.872-16.323 93.986-44.784 8.704-10.718 24.448-12.351 35.167-3.646 10.718 8.704 12.35 24.449 3.646 35.167-32.653 40.204-81.057 63.263-132.8 63.263z" fill="#FFFFFF" p-id="2615"></path></svg>`
+        });
+        app.component("icon-very-satisfied-face", {
+            props: { size: String },
+            template: `<svg t="1686833932788" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2769" :width="size" :height="size"><path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15" p-id="2770"></path><path d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815" p-id="2771"></path><path d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815" p-id="2772"></path><path d="M512.011 706.218c79.08 0 145.727-53.231 166.063-125.817 6.554-23.394-10.835-46.623-35.13-46.623H381.068c-23.959 0-41.692 22.74-35.337 45.841 20.075 72.985 86.917 126.599 166.28 126.599z" fill="#FFFFFF" p-id="2773"></path></svg>`
+        });
+        app.component("icon-very-ordinary-face", {
+            props: { size: String },
+            template: `<svg t="1686834092196" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10062" :width="size" :height="size"><path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15" p-id="10063"></path><path d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815" p-id="10064"></path><path d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815" p-id="10065"></path><path d="M587.864 612.998H436.136c-15.4 0-28-12.6-28-28s12.6-28 28-28h151.728c15.4 0 28 12.6 28 28s-12.6 28-28 28z" fill="#FFFFFF" p-id="10066"></path></svg>`
+        });
+        app.component("icon-dissatisfied-face", {
+            props: { size: String },
+            template: `<svg t="1686670839646" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5944" :width="size" :height="size"><path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15" p-id="5945"></path><path d="M405.619 461.477l-81.178-21.859c-14.87-4.004-23.761-19.447-19.757-34.317 4.004-14.87 19.447-23.761 34.317-19.757l81.178 21.859c14.87 4.004 23.761 19.447 19.757 34.317-4.004 14.871-19.446 23.762-34.317 19.757zM618.381 461.477l81.178-21.859c14.87-4.004 23.761-19.447 19.757-34.317-4.004-14.87-19.447-23.761-34.317-19.757l-81.178 21.859c-14.87 4.004-23.761 19.447-19.757 34.317 4.004 14.871 19.446 23.762 34.317 19.757z" fill="#231815" p-id="5946"></path><path d="M400.162 637.011a24.894 24.894 0 0 1-15.746-5.595c-10.718-8.704-12.35-24.449-3.646-35.167 32.651-40.204 81.055-63.263 132.798-63.263 49.543 0 96.608 21.465 129.126 58.892 9.056 10.422 7.948 26.213-2.475 35.269-10.423 9.057-26.213 7.948-35.269-2.476-23.017-26.491-56.324-41.685-91.382-41.685-36.615 0-70.872 16.323-93.986 44.784-4.939 6.084-12.149 9.241-19.42 9.241z" fill="#FFFFFF" p-id="5947"></path></svg>`
+        });
+        app.component("icon-mine", {
+            props: { size: String },
+            template: `<svg t="1686667579057" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1328" :width="size" :height="size"><path d="M978.74 73.2c16.22 7.93 30.85 14.53 44.71 21.22-42.2 90.06-159.05 106.1-225.73 33.4-11.87-12.68-21.51-26.45-34.04-38.43-47.83-45.14-117.01-28.86-141.16 34.47 19.06 8.17 38.9 16.25 58.22 25.16 32.22 14.34 42.46 37.33 28.78 69.84-10.33 25.7-26.44 39.43-39.3 67.53-73.07-61.8-148.72-89.88-245.43-101.44 14.45-32.6 23.09-57.54 37.84-86.61 10.98-20.84 33.14-27.32 58.14-19.15 15.83 5.03 31.17 12.31 48.67 19.29 4.69-8.51 9.32-17.04 14.08-24.81C629.72-2.5 733.2-16.96 797.47 44.61c10.72 10.05 20.12 20.9 29.39 31.92 49.13 54.57 104.69 53.74 151.88-3.33z m0 0" fill="#4C4C4C" p-id="1329"></path><path d="M395.34 204.49C178.9 204.49 3.45 379.95 3.45 596.38c0 216.43 175.45 391.89 391.89 391.89s391.89-175.45 391.89-391.89c0-216.43-175.46-391.89-391.89-391.89z m-14.08 742.76c-0.39 0.09-0.6 0.13-0.6 0.13 0.21-0.04 0.4-0.08 0.6-0.13 13.31-2.9 247.66-58.02 338.34-368.44 0.01 0.01 69.65 284.07-338.34 368.44z" fill="#4C4C4C" p-id="1330"></path></svg>`
+        });
+        app.component("icon-flag", {
+            props: { size: String },
+            template: `<svg t="1686667343748" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3869" data-spm-anchor-id="a313x.7781069.0.i2" :width="size" :height="size"><path d="M215.4 160.6H177c-8.9 0-16 7.2-16 16V849c0 8.9 7.2 16 16 16h38.4c8.9 0 16-7.2 16-16V176.7c0.1-8.9-7.1-16.1-16-16.1zM848.1 236c-189 152.5-378-180.6-567.1-28.2-8.8 7.1-16 21.3-16 30.1v430.9c0 8.9 7.2 9 16 1.9 189-152.5 378.1 180.7 567.1 28.2 8.9-7.1 16-21.3 16-30.1V237.9c0.1-8.8-7.1-9-16-1.9z" fill="#d81e06" p-id="3870" data-spm-anchor-id="a313x.7781069.0.i1"></path></svg>`
+        });
+        app.mount("#app");
     </script>
 </body>
 
