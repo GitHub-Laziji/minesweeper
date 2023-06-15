@@ -131,14 +131,20 @@
             <div class="toolbar-border">
                 <div class="toolbar" :style="{'width':boardW+'px'}">
                     <div class="toolbar-msg">
-                        <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055" :value="28"></digital>
+                        <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                            :value="n-flagNum">
+                        </digital>
                     </div>
                     <div class="toolbar-btn" @click="init(16, 16, 10)">
                         <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
                         <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
                         <icon-satisfied-face v-else></icon-satisfied-face>
                     </div>
-                    <div class="toolbar-msg"></div>
+                    <div class="toolbar-msg">
+                        <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                            :value="time">
+                        </digital>
+                    </div>
                 </div>
             </div>
 
@@ -170,32 +176,56 @@
             <div v-for="(v,i) of vs" :key="i"
                 :style="{'width':w+'px',height:w*1.8+'px','margin-left':(i>0?w*0.2:0)+'px','position': 'relative'}">
                 <div class="digital-h" :style="{'width': w*0.76+'px','top':0+'px','left':w*0.12+'px'}">
-                    <div class="digital-b-t" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-b" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-t"
+                        :style="{'border-color': [0,2,3,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
+                    <div class="digital-b-b"
+                        :style="{'border-color': [0,2,3,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
                 </div>
                 <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':0+'px'}">
-                    <div class="digital-b-l" :style="{'border-color': [0].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-r" :style="{'border-color': [0].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-l"
+                        :style="{'border-color': [0,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-r"
+                        :style="{'border-color': [0,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
                 </div>
                 <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':w*0.8+'px'}">
-                    <div class="digital-b-l" :style="{'border-color': [0,1,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-r" :style="{'border-color': [0,1,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-l"
+                        :style="{'border-color': [0,1,2,3,4,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
+                    <div class="digital-b-r"
+                        :style="{'border-color': [0,1,2,3,4,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
                 </div>
                 <div class="digital-h" :style="{'width': w*0.76+'px','top':w*0.8+'px','left':w*0.12+'px'}">
-                    <div class="digital-b-t" :style="{'border-color': [2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-b" :style="{'border-color': [2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-t"
+                        :style="{'border-color': [2,3,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
+                    <div class="digital-b-b"
+                        :style="{'border-color': [2,3,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
                 </div>
                 <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':0+'px'}">
-                    <div class="digital-b-l" :style="{'border-color': [0,2].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-r" :style="{'border-color': [0,2].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-l"
+                        :style="{'border-color': [0,2,6,8].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-r"
+                        :style="{'border-color': [0,2,6,8].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
                 </div>
                 <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':w*0.8+'px'}">
-                    <div class="digital-b-l" :style="{'border-color': [0,1,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-r" :style="{'border-color': [0,1,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-l"
+                        :style="{'border-color': [0,1,3,4,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
+                    <div class="digital-b-r"
+                        :style="{'border-color': [0,1,3,4,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
                 </div>
                 <div class="digital-h" :style="{'width': w*0.76+'px','top':w*1.6+'px','left':w*0.12+'px'}">
-                    <div class="digital-b-t" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-b" :style="{'border-color': [0,2,3].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    <div class="digital-b-t"
+                        :style="{'border-color': [0,2,3,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
+                    <div class="digital-b-b"
+                        :style="{'border-color': [0,2,3,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -216,6 +246,8 @@
                     h: null,
                     n: null,
                     status: "RUNNING",
+                    time: 0,
+                    flagNum: 0,
                     openNum: 0,
                     mouse: {
                         x: null,
@@ -225,6 +257,11 @@
                 }
             },
             mounted() {
+                setInterval(() => {
+                    if (this.status == "RUNNING") {
+                        this.time++;
+                    }
+                }, 1000);
                 this.init(16, 16, 10);
             },
             methods: {
@@ -232,13 +269,17 @@
                     this.w = w;
                     this.h = h;
                     this.n = n;
+                    this.time = 0;
+                    this.flagNum = 0;
+                    this.openNum = 0;
+                    this.status = "RUNNING";
+                    this.map = [];
                     this.boardW = w * this.boxW;
                     let random = [];
                     for (let i = 0; i < w * h; i++) {
                         random.push({ x: i % w, y: Math.floor(i / w), o: Math.random() });
                     }
                     random.sort((a, b) => a.o - b.o);
-                    this.map = [];
                     for (let y = 0; y < h; y++) {
                         this.map[y] = [];
                         for (let x = 0; x < w; x++) {
@@ -250,8 +291,6 @@
                         this.map[y][x].mine = true;
                         this.aroundForeach(x, y, (cx, cy, c) => c.aroundNum++);
                     }
-                    this.status = "RUNNING";
-                    this.openNum = 0;
                 },
                 onMouseDown(e) {
                     console.log(e);
@@ -277,8 +316,10 @@
                         if (this.mouse.buttons == 2) {
                             if (this.map[y][x].status == "INIT") {
                                 this.map[y][x].status = "FLAG";
+                                this.flagNum++;
                             } else if (this.map[y][x].status == "FLAG") {
                                 this.map[y][x].status = "INIT";
+                                this.flagNum--;
                             }
                         }
                         if (this.mouse.buttons == 3) {
@@ -293,29 +334,33 @@
                     }
                 },
                 open(x, y) {
-                    if (this.map[y][x].status != "OPEN") {
-                        let que = [{ x, y }];
-                        let dp = new Set();
-                        while (que.length) {
-                            let { x, y } = que.shift();
-                            if (dp.has(y * this.w + x)) {
-                                continue;
-                            }
-                            dp.add(y * this.w + x);
-                            this.map[y][x].status = "OPEN";
-                            this.openNum++;
-                            if (!this.map[y][x].mine && this.map[y][x].aroundNum == 0) {
-                                this.aroundForeach(x, y, (cx, cy, c) => que.push({ y: cy, x: cx }));
-                            }
+                    if (this.map[y][x].status == "OPEN") {
+                        return;
+                    }
+                    let que = [{ x, y }];
+                    let dp = new Set();
+                    while (que.length) {
+                        let { x, y } = que.shift();
+                        if (this.map[y][x].status == "OPEN") {
+                            continue;
                         }
-                        if (this.map[y][x].mine) {
-                            this.status = "LOSE";
-                            return;
+                        if (dp.has(y * this.w + x)) {
+                            continue;
                         }
-                        if (this.openNum == this.w * this.h - this.n) {
-                            this.status = "WIN";
-                            return;
+                        dp.add(y * this.w + x);
+                        this.map[y][x].status = "OPEN";
+                        this.openNum++;
+                        if (!this.map[y][x].mine && this.map[y][x].aroundNum == 0) {
+                            this.aroundForeach(x, y, (cx, cy, c) => que.push({ y: cy, x: cx }));
                         }
+                    }
+                    if (this.map[y][x].mine) {
+                        this.status = "LOSE";
+                        return;
+                    }
+                    if (this.openNum == this.w * this.h - this.n) {
+                        this.status = "WIN";
+                        return;
                     }
                 },
                 aroundForeach(x, y, handle) {
@@ -337,8 +382,8 @@
                 return {
                     l: 1,
                     w: 16,
-                    ac: "red",
-                    iac: "#00000000",
+                    ac: "#ff0000",
+                    iac: "#ff000055",
                     vs: [0, 0],
                     maxValue: 0
                 }
@@ -351,8 +396,8 @@
             mounted() {
                 this.l = this.length <= 0 ? 1 : this.length;
                 this.w = this.width <= 0 ? 16 : this.width;
-                this.ac = this.activeColor;
-                this.iac = this.inactiveColor;
+                this.ac = this.activeColor || this.ac;
+                this.iac = this.inactiveColor || this.iac;
                 this.maxValue = Math.pow(10, this.l) - 1;
                 this.initVs(this.value);
             },
