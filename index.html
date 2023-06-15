@@ -327,7 +327,7 @@
                                 let flagNum = 0;
                                 this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
                                 if (this.map[y][x].aroundNum == flagNum) {
-                                    this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cy, cx) : null);
+                                    this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cx, cy) : null);
                                 }
                             }
                         }
