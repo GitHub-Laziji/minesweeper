@@ -16,19 +16,16 @@
             background: #EEEEEE;
         }
 
-        #app {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-        }
-
         .hidden {
             display: none !important;
         }
 
-        /* main */
+        .background {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .main {
             background: #CCCCCC;
             border-left: 2px solid #FDFDFD;
@@ -135,66 +132,68 @@
 
 <body>
     <div id="app" class="hidden">
-        <div class="main" @contextmenu.prevent="e=>e.preventDefault()">
-            <div class="border">
-                <div class="toolbar" :style="{'width':boardBtnWidth*w+'px'}">
-                    <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level0')"
-                        @mousemove="e=>onMouseMove(e,'level0')" @mouseleave="e=>onMouseLeave(e,'level0')"
-                        @mouseup="e=>onMouseUp(e,'level0',()=>mouse.buttons==1?init(9,9,10):null)"
-                        :class="mouse.refName=='level0'&&mouse.buttons==1?'btn-hover':'btn'">
-                        简单
-                    </div>
-                    <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level1')"
-                        @mousemove="e=>onMouseMove(e,'level1')" @mouseleave="e=>onMouseLeave(e,'level1')"
-                        @mouseup="e=>onMouseUp(e,'level1',()=>mouse.buttons==1?init(16,16,40):null)"
-                        :class="mouse.refName=='level1'&&mouse.buttons==1?'btn-hover':'btn'">
-                        一般
-                    </div>
-                    <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level2')"
-                        @mousemove="e=>onMouseMove(e,'level2')" @mouseleave="e=>onMouseLeave(e,'level2')"
-                        @mouseup="e=>onMouseUp(e,'level2',()=>mouse.buttons==1?init(30,16,99):null)"
-                        :class="mouse.refName=='level2'&&mouse.buttons==1?'btn-hover':'btn'">
-                        困难
+        <div class="background" :style="{'width': 100/zoom+'vw','height': 100/zoom+'vh','zoom':zoom}">
+            <div class="main" @contextmenu.prevent="e=>e.preventDefault()">
+                <div class="border">
+                    <div class="toolbar" :style="{'width':boardBtnWidth*w+'px'}">
+                        <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level0')"
+                            @mousemove="e=>onMouseMove(e,'level0')" @mouseleave="e=>onMouseLeave(e,'level0')"
+                            @mouseup="e=>onMouseUp(e,'level0',()=>mouse.buttons==1?init(9,9,10):null)"
+                            :class="mouse.refName=='level0'&&mouse.buttons==1?'btn-hover':'btn'">
+                            简单
+                        </div>
+                        <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level1')"
+                            @mousemove="e=>onMouseMove(e,'level1')" @mouseleave="e=>onMouseLeave(e,'level1')"
+                            @mouseup="e=>onMouseUp(e,'level1',()=>mouse.buttons==1?init(16,16,40):null)"
+                            :class="mouse.refName=='level1'&&mouse.buttons==1?'btn-hover':'btn'">
+                            一般
+                        </div>
+                        <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level2')"
+                            @mousemove="e=>onMouseMove(e,'level2')" @mouseleave="e=>onMouseLeave(e,'level2')"
+                            @mouseup="e=>onMouseUp(e,'level2',()=>mouse.buttons==1?init(30,16,99):null)"
+                            :class="mouse.refName=='level2'&&mouse.buttons==1?'btn-hover':'btn'">
+                            困难
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="border">
-                <div class="toolbar" :style="{'width':boardBtnWidth*w+'px'}">
-                    <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
-                        background-color="#333333" :value="n-flagNum">
-                    </digital>
-                    <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
-                        @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
-                        @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
-                        :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
-                        <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
-                        <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
-                        <icon-satisfied-face v-else></icon-satisfied-face>
+                <div class="border">
+                    <div class="toolbar" :style="{'width':boardBtnWidth*w+'px'}">
+                        <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                            background-color="#333333" :value="n-flagNum">
+                        </digital>
+                        <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
+                            @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
+                            @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
+                            :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
+                            <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
+                            <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
+                            <icon-satisfied-face v-else></icon-satisfied-face>
+                        </div>
+                        <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                            background-color="#333333" :value="time">
+                        </digital>
                     </div>
-                    <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
-                        background-color="#333333" :value="time">
-                    </digital>
                 </div>
-            </div>
-            <div class="border">
-                <div ref="board" :style="{'width':boardBtnWidth*w+'px'}" @mousedown="e=>onMouseDown(e,'board')"
-                    @mousemove="e=>onMouseMove(e,'board')" @mouseleave="e=>onMouseLeave(e,'board')"
-                    @mouseup="e=>onMouseUp(e,'board',boardBtnClickHandle)">
-                    <div v-for="row of map" style="display: flex;">
-                        <div v-for="col of row" class="board-btn"
-                            :style="{'width': boardBtnWidth+'px','height': boardBtnWidth+'px'}"
-                            :class="boardBtnClass(col.x,col.y)">
-                            <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
-                                :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
-                            <template v-if="status=='WIN'">
-                                <icon-flag v-if="col.mine" size="14"></icon-flag>
-                            </template>
-                            <template v-else-if="status=='LOSE'">
-                                <icon-mine v-if="col.mine" size="14"></icon-mine>
-                            </template>
-                            <template v-else>
-                                <icon-flag v-if="col.status=='FLAG'" size="14"></icon-flag>
-                            </template>
+                <div class="border">
+                    <div ref="board" :style="{'width':boardBtnWidth*w+'px'}" @mousedown="e=>onMouseDown(e,'board')"
+                        @mousemove="e=>onMouseMove(e,'board')" @mouseleave="e=>onMouseLeave(e,'board')"
+                        @mouseup="e=>onMouseUp(e,'board',boardBtnClickHandle)">
+                        <div v-for="row of map" style="display: flex;">
+                            <div v-for="col of row" class="board-btn"
+                                :style="{'width': boardBtnWidth+'px','height': boardBtnWidth+'px'}"
+                                :class="boardBtnClass(col.x,col.y)">
+                                <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
+                                    :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
+                                <template v-if="status=='WIN'">
+                                    <icon-flag v-if="col.mine" size="14"></icon-flag>
+                                </template>
+                                <template v-else-if="status=='LOSE'">
+                                    <icon-mine v-if="col.mine" size="14"></icon-mine>
+                                </template>
+                                <template v-else>
+                                    <icon-flag v-if="col.status=='FLAG'" size="14"></icon-flag>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -271,6 +270,7 @@
                 return {
                     numColor,
                     boardBtnWidth,
+                    zoom: 1.1,
                     map: [],
                     w: null,
                     h: null,
@@ -434,14 +434,14 @@
                 },
                 calcXY(e, refName) {
                     let ref = this.$refs[refName];
-                    let clientX = e.clientX - ref.offsetLeft;
-                    let clientY = e.clientY - ref.offsetTop;
-                    clientX = Math.max(clientX, 0);
-                    clientX = Math.min(clientX, ref.offsetWidth);
-                    clientY = Math.max(clientY, 0);
-                    clientY = Math.min(clientY, ref.offsetHeight);
-                    let x = Math.floor(clientX / this.mouse.refs.board.w);
-                    let y = Math.floor(clientY / this.mouse.refs.board.h);
+                    let refX = (e.clientX + window.scrollX) / this.zoom - ref.offsetLeft;
+                    let refY = (e.clientY + window.scrollY) / this.zoom - ref.offsetTop;
+                    refX = Math.max(refX, 0);
+                    refX = Math.min(refX, ref.offsetWidth);
+                    refY = Math.max(refY, 0);
+                    refY = Math.min(refY, ref.offsetHeight);
+                    let x = Math.floor(refX / this.mouse.refs.board.w);
+                    let y = Math.floor(refY / this.mouse.refs.board.h);
                     return { x, y };
                 },
                 aroundForeach(x, y, handle) {
