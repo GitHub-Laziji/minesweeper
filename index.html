@@ -50,18 +50,16 @@
             font-family: system-ui;
         }
 
-        .toolbar-border {
-            border-right: 2px solid #FDFDFD;
-            border-bottom: 2px solid #FDFDFD;
-            border-left: 2px solid #727272;
-            border-top: 2px solid #727272;
-            margin-bottom: 5px;
-        }
 
         .toolbar {
             display: flex;
             justify-content: space-between;
             padding: 3px;
+            border-right: 2px solid #FDFDFD;
+            border-bottom: 2px solid #FDFDFD;
+            border-left: 2px solid #727272;
+            border-top: 2px solid #727272;
+            margin-bottom: 5px;
         }
 
         .toolbar-msg {
@@ -123,44 +121,42 @@
                 <div class="toolbar" :style="{'width':boardW+'px'}">
                     <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level0')"
                         @mousemove="e=>onMouseMove(e,'level0')" @mouseleave="e=>onMouseLeave(e,'level0')"
-                        @mouseup="e=>onMouseUp(e,'level0',()=>init(9,9,10))"
+                        @mouseup="e=>onMouseUp(e,'level0',()=>mouse.buttons==1?init(9,9,10):null)"
                         :class="mouse.refName=='level0'&&mouse.buttons==1?'btn-hover':'btn'">
                         简单
                     </div>
                     <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level1')"
                         @mousemove="e=>onMouseMove(e,'level1')" @mouseleave="e=>onMouseLeave(e,'level1')"
-                        @mouseup="e=>onMouseUp(e,'level1',()=>init(16,16,40))"
+                        @mouseup="e=>onMouseUp(e,'level1',()=>mouse.buttons==1?init(16,16,40):null)"
                         :class="mouse.refName=='level1'&&mouse.buttons==1?'btn-hover':'btn'">
                         一般
                     </div>
                     <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level2')"
                         @mousemove="e=>onMouseMove(e,'level2')" @mouseleave="e=>onMouseLeave(e,'level2')"
-                        @mouseup="e=>onMouseUp(e,'level2',()=>init(30,16,99))"
+                        @mouseup="e=>onMouseUp(e,'level2',()=>mouse.buttons==1?init(30,16,99):null)"
                         :class="mouse.refName=='level2'&&mouse.buttons==1?'btn-hover':'btn'">
                         困难
                     </div>
                 </div>
             </div>
-            <div class="toolbar-border">
-                <div class="toolbar" :style="{'width':boardW+'px'}">
-                    <div class="toolbar-msg">
-                        <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055"
-                            :value="n-flagNum">
-                        </digital>
-                    </div>
-                    <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
-                        @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
-                        @mouseup="e=>onMouseUp(e,'restart',restartBtnClickHandle)"
-                        :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
-                        <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
-                        <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
-                        <icon-satisfied-face v-else></icon-satisfied-face>
-                    </div>
-                    <div class="toolbar-msg">
-                        <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055"
-                            :value="time">
-                        </digital>
-                    </div>
+            <div class="toolbar" :style="{'width':boardW+'px'}">
+
+                <div class="toolbar-msg">
+                    <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                        :value="n-flagNum">
+                    </digital>
+                </div>
+                <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
+                    @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
+                    @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
+                    :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
+                    <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
+                    <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
+                    <icon-satisfied-face v-else></icon-satisfied-face>
+                </div>
+                <div class="toolbar-msg">
+                    <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055" :value="time">
+                    </digital>
                 </div>
             </div>
 
@@ -349,7 +345,6 @@
                     this.mouse.refs[refName].x = null;
                     this.mouse.refs[refName].y = null;
                     this.mouse.refName = null;
-                    console.log(e)
                 },
                 onMouseDown(e, refName) {
                     this.mouse.buttons = e.buttons;
@@ -406,11 +401,6 @@
                         }
                     }
                     return "btn";
-                },
-                restartBtnClickHandle(e) {
-                    if (this.mouse.buttons == 1) {
-                        this.init(this.w, this.h, this.n);
-                    }
                 },
                 open(x, y) {
                     if (this.map[y][x].status == "OPEN") {
