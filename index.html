@@ -126,7 +126,7 @@
 
 <body style="margin: 0;padding: 0;">
     <div id="app" style="display: flex;">
-        <div class="main">
+        <div class="main" @contextmenu.prevent="e=>e.preventDefault()">
             <div class="toolbar-border">
                 <div class="toolbar" :style="{'width':boardW+'px'}">
                     <div class="toolbar-msg">
@@ -134,7 +134,9 @@
                             :value="n-flagNum">
                         </digital>
                     </div>
-                    <div ref="restart" class="btn toolbar-btn" @click="init(16, 16, 10)">
+                    <div ref="restart" class="toolbar-btn" @mousedown="e=>onMouseDown(e,'restart')"
+                        @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
+                        @mouseup="e=>onMouseUp(e,'restart',restartBtnClickHandle)" :class="restartBtnClass(0,0)">
                         <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
                         <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
                         <icon-satisfied-face v-else></icon-satisfied-face>
@@ -149,10 +151,10 @@
 
             <div class="board-border">
                 <div ref="board" :style="{'width':boardW+'px'}" @mousedown="e=>onMouseDown(e,'board')"
-                    @mousemove="e=>onMouseMove(e,'board')" @mouseleava="e=>onMouseLeave(e,'board')"
-                    @mouseup="onMouseUpBoard" @contextmenu.prevent="e=>e.preventDefault()">
+                    @mousemove="e=>onMouseMove(e,'board')" @mouseleave="e=>onMouseLeave(e,'board')"
+                    @mouseup="e=>onMouseUp(e,'board',boardBtnClickHandle)">
                     <div v-for="row of map" style="display: flex;">
-                        <div v-for="col of row" class="box" :class="boardBtnClass(col)">
+                        <div v-for="col of row" class="box" :class="boardBtnClass(col.x,col.y)">
                             <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
                                 :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
                             <template v-if="status=='WIN'">
@@ -304,52 +306,55 @@
                 },
                 onMouseMove(e, refName) {
                     this.mouse.refName = refName;
-                    let ref = this.$refs[refName];
-                    this.mouse.refs[refName].x = Math.floor((e.clientX - ref.offsetLeft) / this.mouse.refs[refName].w);
-                    this.mouse.refs[refName].y = Math.floor((e.clientY - ref.offsetTop) / this.mouse.refs[refName].h);
+                    let { x, y } = this.calcXY(e, "board");
+                    this.mouse.refs[refName].x = x
+                    this.mouse.refs[refName].y = y;
                     this.mouse.buttons = e.buttons;
                 },
                 onMouseLeave(e, refName) {
-                    this.mouse[refName].x = null;
-                    this.mouse[refName].y = null;
+                    this.mouse.refs[refName].x = null;
+                    this.mouse.refs[refName].y = null;
                     this.mouse.refName = null;
+                    console.log(e)
                 },
                 onMouseDown(e, refName) {
                     this.mouse.buttons = e.buttons;
                 },
-                onMouseUpBoard(e) {
-                    console.log(e);
+                onMouseUp(e, refName, handle) {
+                    if (e.buttons == 0) {
+                        handle(e);
+                        this.mouse.buttons = 0;
+                    }
+                },
+                boardBtnClickHandle(e) {
                     if (this.status != "RUNNING") {
                         return;
                     }
-                    if (e.buttons == 0) {
-                        let board = this.$refs.board;
-                        let x = Math.floor((e.clientX - board.offsetLeft) / this.mouse.refs.board.w);
-                        let y = Math.floor((e.clientY - board.offsetTop) / this.mouse.refs.board.h);
-                        this.mouse.x = x;
-                        this.mouse.y = y;
-                        if (this.mouse.buttons == 1) {
-                            this.open(x, y);
+                    let { x, y } = this.calcXY(e, "board");
+                    this.mouse.x = x;
+                    this.mouse.y = y;
+                    if (this.mouse.buttons == 1) {
+                        this.open(x, y);
+                    }
+                    if (this.mouse.buttons == 2) {
+                        if (this.map[y][x].status == "INIT") {
+                            this.map[y][x].status = "FLAG";
+                            this.flagNum++;
+                        } else if (this.map[y][x].status == "FLAG") {
+                            this.map[y][x].status = "INIT";
+                            this.flagNum--;
                         }
-                        if (this.mouse.buttons == 2) {
-                            if (this.map[y][x].status == "INIT") {
-                                this.map[y][x].status = "FLAG";
-                                this.flagNum++;
-                            } else if (this.map[y][x].status == "FLAG") {
-                                this.map[y][x].status = "INIT";
-                                this.flagNum--;
-                            }
-                        }
-                        if (this.mouse.buttons == 3 && this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
-                            let flagNum = 0;
-                            this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
-                            if (this.map[y][x].aroundNum == flagNum) {
-                                this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cx, cy) : null);
-                            }
+                    }
+                    if (this.mouse.buttons == 3 && this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
+                        let flagNum = 0;
+                        this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
+                        if (this.map[y][x].aroundNum == flagNum) {
+                            this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cx, cy) : null);
                         }
                     }
                 },
-                boardBtnClass(col) {
+                boardBtnClass(x, y) {
+                    let col = this.map[y][x];
                     if (col.status == 'OPEN') {
                         return "board-down";
                     }
@@ -361,11 +366,22 @@
                             }
                         }
                         if (this.mouse.buttons == 3 && mouseCol.status == "OPEN" && mouseCol.aroundNum && col.status == 'INIT') {
-                            let flagNum = 0;
-                            this.aroundForeach(mouseCol.x, mouseCol.y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
-                            if (mouseCol.aroundNum == flagNum && Math.abs(col.x - mouseCol.x) <= 1 && Math.abs(col.y - mouseCol.y) <= 1) {
+                            if (Math.abs(col.x - mouseCol.x) <= 1 && Math.abs(col.y - mouseCol.y) <= 1) {
                                 return "btn-hover";
                             }
+                        }
+                    }
+                    return "btn";
+                },
+                restartBtnClickHandle(e) {
+                    if (e.buttons == 0 && this.mouse.buttons == 1) {
+                        this.init(this.w, this.h, this.n);
+                    }
+                },
+                restartBtnClass(x, y) {
+                    if (this.mouse.refName == "restart") {
+                        if (this.mouse.buttons == 1) {
+                            return "btn-hover";
                         }
                     }
                     return "btn";
@@ -399,6 +415,18 @@
                         this.status = "WIN";
                         return;
                     }
+                },
+                calcXY(e, refName) {
+                    let ref = this.$refs[refName];
+                    let clientX = e.clientX - ref.offsetLeft;
+                    let clientY = e.clientY - ref.offsetTop;
+                    clientX = Math.max(clientX, 0);
+                    clientX = Math.min(clientX, ref.offsetWidth);
+                    clientY = Math.max(clientY, 0);
+                    clientY = Math.min(clientY, ref.offsetHeight);
+                    let x = Math.floor(clientX / this.mouse.refs.board.w);
+                    let y = Math.floor(clientY / this.mouse.refs.board.h);
+                    return { x, y };
                 },
                 aroundForeach(x, y, handle) {
                     for (let dy = -1; dy <= 1; dy++) {
