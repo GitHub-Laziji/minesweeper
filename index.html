@@ -16,34 +16,41 @@
             user-select: none;
         }
 
-        .board-border {
-            border-right: 2px solid #FDFDFD;
-            border-bottom: 2px solid #FDFDFD;
-            border-left: 2px solid #727272;
-            border-top: 2px solid #727272;
-        }
-
-        .box {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-family: system-ui;
-        }
-
-        .box-init {
+        .btn {
             background: #BBBBBB;
             border-left: 2px solid #FDFDFD;
             border-top: 2px solid #FDFDFD;
             border-right: 2px solid #727272;
             border-bottom: 2px solid #727272;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .box-open {
+        .btn-hover {
+            background: #BABABA;
+            border-left: 1px solid #DBDBDB;
+            border-top: 1px solid #DBDBDB;
+            border-right: 1px solid #727272;
+            border-bottom: 1px solid #727272;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .board-down {
             background: #C8C8C8;
             border: 1px solid #9B9B9B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box {
+            width: 20px;
+            height: 20px;
+            font-weight: 800;
+            font-family: system-ui;
         }
 
         .toolbar-border {
@@ -63,14 +70,6 @@
         .toolbar-btn {
             width: 30px;
             height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #BBBBBB;
-            border-left: 2px solid #FDFDFD;
-            border-top: 2px solid #FDFDFD;
-            border-right: 2px solid #727272;
-            border-bottom: 2px solid #727272;
         }
 
         .toolbar-msg {
@@ -135,7 +134,7 @@
                             :value="n-flagNum">
                         </digital>
                     </div>
-                    <div class="toolbar-btn" @click="init(16, 16, 10)">
+                    <div ref="restart" class="btn toolbar-btn" @click="init(16, 16, 10)">
                         <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
                         <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
                         <icon-satisfied-face v-else></icon-satisfied-face>
@@ -149,11 +148,11 @@
             </div>
 
             <div class="board-border">
-                <div ref="board" :style="{'width':boardW+'px'}" @mousedown="onMouseDown" @mouseup="onMouseUp"
-                    @contextmenu.prevent="e=>e.preventDefault()">
+                <div ref="board" :style="{'width':boardW+'px'}" @mousedown="e=>onMouseDown(e,'board')"
+                    @mousemove="e=>onMouseMove(e,'board')" @mouseleava="e=>onMouseLeave(e,'board')"
+                    @mouseup="onMouseUpBoard" @contextmenu.prevent="e=>e.preventDefault()">
                     <div v-for="row of map" style="display: flex;">
-                        <div v-for="col of row" class="box"
-                            :class="{'box-init':col.status=='INIT'||col.status=='FLAG','box-open':col.status=='OPEN'}">
+                        <div v-for="col of row" class="box" :class="boardBtnClass(col)">
                             <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
                                 :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
                             <template v-if="status=='WIN'">
@@ -236,10 +235,8 @@
         const app = Vue.createApp({
             data() {
                 const numColor = ["#FFFFFF", "#0002F4", "#367922", "#E43222", "#020082", "#7E1D19", "#7E1D19", "#7E1D19", "#7E1D19"];
-                const boxW = 20;
                 return {
                     numColor,
-                    boxW,
                     boardW: 0,
                     map: [],
                     w: null,
@@ -250,9 +247,22 @@
                     flagNum: 0,
                     openNum: 0,
                     mouse: {
-                        x: null,
-                        y: null,
-                        buttons: 0
+                        refName: null,
+                        buttons: 0,
+                        refs: {
+                            board: {
+                                w: 20,
+                                h: 20,
+                                x: null,
+                                y: null,
+                            },
+                            restart: {
+                                w: 30,
+                                h: 30,
+                                x: null,
+                                y: null,
+                            }
+                        }
                     }
                 }
             },
@@ -274,7 +284,7 @@
                     this.openNum = 0;
                     this.status = "RUNNING";
                     this.map = [];
-                    this.boardW = w * this.boxW;
+                    this.boardW = w * this.mouse.refs.board.w;
                     let random = [];
                     for (let i = 0; i < w * h; i++) {
                         random.push({ x: i % w, y: Math.floor(i / w), o: Math.random() });
@@ -292,22 +302,30 @@
                         this.aroundForeach(x, y, (cx, cy, c) => c.aroundNum++);
                     }
                 },
-                onMouseDown(e) {
-                    console.log(e);
-                    if (this.status != "RUNNING") {
-                        return;
-                    }
+                onMouseMove(e, refName) {
+                    this.mouse.refName = refName;
+                    let ref = this.$refs[refName];
+                    this.mouse.refs[refName].x = Math.floor((e.clientX - ref.offsetLeft) / this.mouse.refs[refName].w);
+                    this.mouse.refs[refName].y = Math.floor((e.clientY - ref.offsetTop) / this.mouse.refs[refName].h);
                     this.mouse.buttons = e.buttons;
                 },
-                onMouseUp(e) {
+                onMouseLeave(e, refName) {
+                    this.mouse[refName].x = null;
+                    this.mouse[refName].y = null;
+                    this.mouse.refName = null;
+                },
+                onMouseDown(e, refName) {
+                    this.mouse.buttons = e.buttons;
+                },
+                onMouseUpBoard(e) {
                     console.log(e);
                     if (this.status != "RUNNING") {
                         return;
                     }
                     if (e.buttons == 0) {
                         let board = this.$refs.board;
-                        let x = Math.floor((e.clientX - board.offsetLeft) / this.boxW);
-                        let y = Math.floor((e.clientY - board.offsetTop) / this.boxW);
+                        let x = Math.floor((e.clientX - board.offsetLeft) / this.mouse.refs.board.w);
+                        let y = Math.floor((e.clientY - board.offsetTop) / this.mouse.refs.board.h);
                         this.mouse.x = x;
                         this.mouse.y = y;
                         if (this.mouse.buttons == 1) {
@@ -322,16 +340,35 @@
                                 this.flagNum--;
                             }
                         }
-                        if (this.mouse.buttons == 3) {
-                            if (this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
-                                let flagNum = 0;
-                                this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
-                                if (this.map[y][x].aroundNum == flagNum) {
-                                    this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cx, cy) : null);
-                                }
+                        if (this.mouse.buttons == 3 && this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
+                            let flagNum = 0;
+                            this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
+                            if (this.map[y][x].aroundNum == flagNum) {
+                                this.aroundForeach(x, y, (cx, cy, c) => c.status != "FLAG" ? this.open(cx, cy) : null);
                             }
                         }
                     }
+                },
+                boardBtnClass(col) {
+                    if (col.status == 'OPEN') {
+                        return "board-down";
+                    }
+                    if (this.status == "RUNNING" && this.mouse.refName == "board") {
+                        let mouseCol = this.map[this.mouse.refs.board.y][this.mouse.refs.board.x];
+                        if (this.mouse.buttons == 1 && (col.status == 'INIT' || col.status == 'FLAG')) {
+                            if (col.x == mouseCol.x && col.y == mouseCol.y) {
+                                return "btn-hover";
+                            }
+                        }
+                        if (this.mouse.buttons == 3 && mouseCol.status == "OPEN" && mouseCol.aroundNum && col.status == 'INIT') {
+                            let flagNum = 0;
+                            this.aroundForeach(mouseCol.x, mouseCol.y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
+                            if (mouseCol.aroundNum == flagNum && Math.abs(col.x - mouseCol.x) <= 1 && Math.abs(col.y - mouseCol.y) <= 1) {
+                                return "btn-hover";
+                            }
+                        }
+                    }
+                    return "btn";
                 },
                 open(x, y) {
                     if (this.map[y][x].status == "OPEN") {
