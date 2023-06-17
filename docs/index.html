@@ -10,13 +10,22 @@
             box-sizing: border-box;
         }
 
+        body {
+            margin: 0;
+            padding: 0;
+            background: #EEEEEE;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
         #app {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100vw;
             height: 100vh;
-            background: #EEEEEE;
         }
 
         .main {
@@ -25,6 +34,7 @@
             border-top: 2px solid #FDFDFD;
             border-right: 2px solid #727272;
             border-bottom: 2px solid #727272;
+            padding: 5px 5px 0px 5px;
             user-select: none;
         }
 
@@ -50,7 +60,7 @@
             justify-content: center;
         }
 
-        .board-down {
+        .btn-on {
             background: #C8C8C8;
             border: 1px solid #9B9B9B;
             display: flex;
@@ -58,16 +68,7 @@
             justify-content: center;
         }
 
-        .box {
-            font-weight: 800;
-            font-family: system-ui;
-        }
-
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            padding: 3px;
+        .border {
             border-right: 2px solid #FDFDFD;
             border-bottom: 2px solid #FDFDFD;
             border-left: 2px solid #727272;
@@ -75,13 +76,11 @@
             margin-bottom: 5px;
         }
 
-        .toolbar-msg {
-            width: 54px;
-            height: 30px;
-            background: #333333;
+        .toolbar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            padding: 3px;
         }
 
         .digital-v {
@@ -127,10 +126,10 @@
     </style>
 </head>
 
-<body style="margin: 0;padding: 0;">
-    <div id="app">
-        <div class="main" style="padding: 5px;" @contextmenu.prevent="e=>e.preventDefault()">
-            <div class="toolbar-border">
+<body>
+    <div id="app" class="hidden">
+        <div class="main" @contextmenu.prevent="e=>e.preventDefault()">
+            <div class="border">
                 <div class="toolbar" :style="{'width':boardW+'px'}">
                     <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level0')"
                         @mousemove="e=>onMouseMove(e,'level0')" @mouseleave="e=>onMouseLeave(e,'level0')"
@@ -152,33 +151,33 @@
                     </div>
                 </div>
             </div>
-            <div class="toolbar" :style="{'width':boardW+'px'}">
-
-                <div class="toolbar-msg">
-                    <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055"
-                        :value="n-flagNum">
+            <div class="border">
+                <div class="toolbar" :style="{'width':boardW+'px'}">
+                    <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                        background-color="#333333" :value="n-flagNum">
                     </digital>
-                </div>
-                <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
-                    @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
-                    @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
-                    :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
-                    <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
-                    <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
-                    <icon-satisfied-face v-else></icon-satisfied-face>
-                </div>
-                <div class="toolbar-msg">
-                    <digital :width="13" :length="3" active-color="#ff0000" inactive-color="#ff000055" :value="time">
+                    <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
+                        @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
+                        @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
+                        :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
+                        <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
+                        <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
+                        <icon-satisfied-face v-else></icon-satisfied-face>
+                    </div>
+                    <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
+                        background-color="#333333" :value="time">
                     </digital>
                 </div>
             </div>
 
-            <div class="board-border">
+
+            <div class="border">
                 <div ref="board" :style="{'width':boardW+'px'}" @mousedown="e=>onMouseDown(e,'board')"
                     @mousemove="e=>onMouseMove(e,'board')" @mouseleave="e=>onMouseLeave(e,'board')"
                     @mouseup="e=>onMouseUp(e,'board',boardBtnClickHandle)">
                     <div v-for="row of map" style="display: flex;">
-                        <div v-for="col of row" class="box" style="width: 20px;height: 20px;"
+                        <div v-for="col of row"
+                            style="width: 20px;height: 20px;font-weight: 800;font-family: system-ui;"
                             :class="boardBtnClass(col.x,col.y)">
                             <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
                                 :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
@@ -198,7 +197,8 @@
         </div>
     </div>
     <div id="digital" style="display: none;">
-        <div style="display: flex;">
+        <div
+            :style="{'display': 'flex','width': w*l*1.2+w*0.2+'px','height': w*2.2+'px','background': bgc,'justify-content': 'center','align-items':'center'}">
             <div v-for="(v,i) of vs" :key="i"
                 :style="{'width':w+'px',height:w*1.8+'px','margin-left':(i>0?w*0.2:0)+'px','position': 'relative'}">
                 <div class="digital-h" :style="{'width': w*0.76+'px','top':0+'px','left':w*0.12+'px'}">
@@ -278,19 +278,19 @@
                         buttons: 0,
                         refs: {
                             level0: {
-                                w: 30,
+                                w: 54,
                                 h: 30,
                                 x: null,
                                 y: null,
                             },
                             level1: {
-                                w: 30,
+                                w: 54,
                                 h: 30,
                                 x: null,
                                 y: null,
                             },
                             level2: {
-                                w: 30,
+                                w: 54,
                                 h: 30,
                                 x: null,
                                 y: null,
@@ -312,6 +312,7 @@
                 }
             },
             mounted() {
+                document.querySelector("#app").classList.remove("hidden");
                 setInterval(() => {
                     if (this.status == "RUNNING") {
                         this.time++;
@@ -398,7 +399,7 @@
                 boardBtnClass(x, y) {
                     let col = this.map[y][x];
                     if (col.status == 'OPEN') {
-                        return "board-down";
+                        return "btn-on";
                     }
                     if (this.status == "RUNNING" && this.mouse.refName == "board") {
                         let mouseCol = this.map[this.mouse.refs.board.y][this.mouse.refs.board.x];
@@ -471,7 +472,7 @@
             }
         });
         app.component("digital", {
-            props: { width: Number, length: Number, activeColor: String, inactiveColor: String, value: Number },
+            props: { width: Number, length: Number, activeColor: String, inactiveColor: String, backgroundColor: String, value: Number },
             template: document.querySelector("#digital").innerHTML,
             data() {
                 return {
@@ -479,6 +480,7 @@
                     w: 16,
                     ac: "#ff0000",
                     iac: "#ff000055",
+                    bgc: "#333333",
                     vs: [0, 0],
                     maxValue: 0
                 }
@@ -493,6 +495,7 @@
                 this.w = this.width <= 0 ? 16 : this.width;
                 this.ac = this.activeColor || this.ac;
                 this.iac = this.inactiveColor || this.iac;
+                this.bgc = this.backgroundColor || this.bgc;
                 this.maxValue = Math.pow(10, this.l) - 1;
                 this.initVs(this.value);
             },
