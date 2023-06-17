@@ -201,67 +201,6 @@
             </div>
         </div>
     </div>
-    <div id="digital" style="display: none;">
-        <div
-            :style="{'display': 'flex','width': w*l*1.2+w*0.2+'px','height': w*2.2+'px','background': bgc,'justify-content': 'center','align-items':'center'}">
-            <div v-for="(v,i) of vs" :key="i"
-                :style="{'width':w+'px',height:w*1.8+'px','margin-left':(i>0?w*0.2:0)+'px','position': 'relative'}">
-                <div class="digital-h" :style="{'width': w*0.76+'px','top':0+'px','left':w*0.12+'px'}">
-                    <div class="digital-b-t"
-                        :style="{'border-color': [0,2,3,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                    <div class="digital-b-b"
-                        :style="{'border-color': [0,2,3,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                </div>
-                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':0+'px'}">
-                    <div class="digital-b-l"
-                        :style="{'border-color': [0,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-r"
-                        :style="{'border-color': [0,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                </div>
-                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':w*0.8+'px'}">
-                    <div class="digital-b-l"
-                        :style="{'border-color': [0,1,2,3,4,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                    <div class="digital-b-r"
-                        :style="{'border-color': [0,1,2,3,4,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                </div>
-                <div class="digital-h" :style="{'width': w*0.76+'px','top':w*0.8+'px','left':w*0.12+'px'}">
-                    <div class="digital-b-t"
-                        :style="{'border-color': [2,3,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                    <div class="digital-b-b"
-                        :style="{'border-color': [2,3,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                </div>
-                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':0+'px'}">
-                    <div class="digital-b-l"
-                        :style="{'border-color': [0,2,6,8].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                    <div class="digital-b-r"
-                        :style="{'border-color': [0,2,6,8].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
-                </div>
-                <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':w*0.8+'px'}">
-                    <div class="digital-b-l"
-                        :style="{'border-color': [0,1,3,4,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                    <div class="digital-b-r"
-                        :style="{'border-color': [0,1,3,4,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                </div>
-                <div class="digital-h" :style="{'width': w*0.76+'px','top':w*1.6+'px','left':w*0.12+'px'}">
-                    <div class="digital-b-t"
-                        :style="{'border-color': [0,2,3,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                    <div class="digital-b-b"
-                        :style="{'border-color': [0,2,3,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
     <script>
         const app = Vue.createApp({
@@ -466,7 +405,64 @@
         // component
         app.component("digital", {
             props: { width: Number, length: Number, activeColor: String, inactiveColor: String, backgroundColor: String, value: Number },
-            template: document.querySelector("#digital").innerHTML,
+            template: `
+            <div :style="{'display': 'flex','width': w*l*1.2+w*0.2+'px','height': w*2.2+'px','background': bgc,'justify-content': 'center','align-items':'center'}">
+                <div v-for="(v,i) of vs" :key="i"
+                    :style="{'width':w+'px',height:w*1.8+'px','margin-left':(i>0?w*0.2:0)+'px','position': 'relative'}">
+                    <div class="digital-h" :style="{'width': w*0.76+'px','top':0+'px','left':w*0.12+'px'}">
+                        <div class="digital-b-t"
+                            :style="{'border-color': [0,2,3,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                        <div class="digital-b-b"
+                            :style="{'border-color': [0,2,3,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                    </div>
+                    <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':0+'px'}">
+                        <div class="digital-b-l"
+                            :style="{'border-color': [0,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                        <div class="digital-b-r"
+                            :style="{'border-color': [0,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    </div>
+                    <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.12+'px','left':w*0.8+'px'}">
+                        <div class="digital-b-l"
+                            :style="{'border-color': [0,1,2,3,4,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                        <div class="digital-b-r"
+                            :style="{'border-color': [0,1,2,3,4,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                    </div>
+                    <div class="digital-h" :style="{'width': w*0.76+'px','top':w*0.8+'px','left':w*0.12+'px'}">
+                        <div class="digital-b-t"
+                            :style="{'border-color': [2,3,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                        <div class="digital-b-b"
+                            :style="{'border-color': [2,3,4,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                    </div>
+                    <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':0+'px'}">
+                        <div class="digital-b-l"
+                            :style="{'border-color': [0,2,6,8].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                        <div class="digital-b-r"
+                            :style="{'border-color': [0,2,6,8].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}"></div>
+                    </div>
+                    <div class="digital-v" :style="{'height': w*0.76+'px','top':w*0.92+'px','left':w*0.8+'px'}">
+                        <div class="digital-b-l"
+                            :style="{'border-color': [0,1,3,4,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                        <div class="digital-b-r"
+                            :style="{'border-color': [0,1,3,4,5,6,7,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                    </div>
+                    <div class="digital-h" :style="{'width': w*0.76+'px','top':w*1.6+'px','left':w*0.12+'px'}">
+                        <div class="digital-b-t"
+                            :style="{'border-color': [0,2,3,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                        <div class="digital-b-b"
+                            :style="{'border-color': [0,2,3,5,6,8,9].indexOf(v)!=-1?ac:iac,'border-width': w*0.1+'px'}">
+                        </div>
+                    </div>
+                </div>
+            </div>`,
             data() {
                 return {
                     l: 1,
