@@ -11,7 +11,6 @@
         }
 
         .main {
-            padding: 5px;
             background: #CCCCCC;
             user-select: none;
         }
@@ -47,8 +46,6 @@
         }
 
         .box {
-            width: 20px;
-            height: 20px;
             font-weight: 800;
             font-family: system-ui;
         }
@@ -65,11 +62,6 @@
             display: flex;
             justify-content: space-between;
             padding: 3px;
-        }
-
-        .toolbar-btn {
-            width: 30px;
-            height: 30px;
         }
 
         .toolbar-msg {
@@ -126,7 +118,29 @@
 
 <body style="margin: 0;padding: 0;">
     <div id="app" style="display: flex;">
-        <div class="main" @contextmenu.prevent="e=>e.preventDefault()">
+        <div class="main" style="padding: 5px;" @contextmenu.prevent="e=>e.preventDefault()">
+            <div class="toolbar-border">
+                <div class="toolbar" :style="{'width':boardW+'px'}">
+                    <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level0')"
+                        @mousemove="e=>onMouseMove(e,'level0')" @mouseleave="e=>onMouseLeave(e,'level0')"
+                        @mouseup="e=>onMouseUp(e,'level0',()=>init(9,9,10))"
+                        :class="mouse.refName=='level0'&&mouse.buttons==1?'btn-hover':'btn'">
+                        简单
+                    </div>
+                    <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level1')"
+                        @mousemove="e=>onMouseMove(e,'level1')" @mouseleave="e=>onMouseLeave(e,'level1')"
+                        @mouseup="e=>onMouseUp(e,'level1',()=>init(16,16,40))"
+                        :class="mouse.refName=='level1'&&mouse.buttons==1?'btn-hover':'btn'">
+                        一般
+                    </div>
+                    <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level2')"
+                        @mousemove="e=>onMouseMove(e,'level2')" @mouseleave="e=>onMouseLeave(e,'level2')"
+                        @mouseup="e=>onMouseUp(e,'level2',()=>init(30,16,99))"
+                        :class="mouse.refName=='level2'&&mouse.buttons==1?'btn-hover':'btn'">
+                        困难
+                    </div>
+                </div>
+            </div>
             <div class="toolbar-border">
                 <div class="toolbar" :style="{'width':boardW+'px'}">
                     <div class="toolbar-msg">
@@ -134,9 +148,10 @@
                             :value="n-flagNum">
                         </digital>
                     </div>
-                    <div ref="restart" class="toolbar-btn" @mousedown="e=>onMouseDown(e,'restart')"
+                    <div ref="restart" style="width: 30px;height: 30px;" @mousedown="e=>onMouseDown(e,'restart')"
                         @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
-                        @mouseup="e=>onMouseUp(e,'restart',restartBtnClickHandle)" :class="restartBtnClass(0,0)">
+                        @mouseup="e=>onMouseUp(e,'restart',restartBtnClickHandle)"
+                        :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
                         <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
                         <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
                         <icon-satisfied-face v-else></icon-satisfied-face>
@@ -154,7 +169,8 @@
                     @mousemove="e=>onMouseMove(e,'board')" @mouseleave="e=>onMouseLeave(e,'board')"
                     @mouseup="e=>onMouseUp(e,'board',boardBtnClickHandle)">
                     <div v-for="row of map" style="display: flex;">
-                        <div v-for="col of row" class="box" :class="boardBtnClass(col.x,col.y)">
+                        <div v-for="col of row" class="box" style="width: 20px;height: 20px;"
+                            :class="boardBtnClass(col.x,col.y)">
                             <span v-if="!col.mine&&col.aroundNum&&col.status=='OPEN'"
                                 :style="{'color':numColor[col.aroundNum]}">{{col.aroundNum}}</span>
                             <template v-if="status=='WIN'">
@@ -252,15 +268,33 @@
                         refName: null,
                         buttons: 0,
                         refs: {
-                            board: {
-                                w: 20,
-                                h: 20,
+                            level0: {
+                                w: 30,
+                                h: 30,
+                                x: null,
+                                y: null,
+                            },
+                            level1: {
+                                w: 30,
+                                h: 30,
+                                x: null,
+                                y: null,
+                            },
+                            level2: {
+                                w: 30,
+                                h: 30,
                                 x: null,
                                 y: null,
                             },
                             restart: {
                                 w: 30,
                                 h: 30,
+                                x: null,
+                                y: null,
+                            },
+                            board: {
+                                w: 20,
+                                h: 20,
                                 x: null,
                                 y: null,
                             }
@@ -274,7 +308,7 @@
                         this.time++;
                     }
                 }, 1000);
-                this.init(16, 16, 10);
+                this.init(9, 9, 10);
             },
             methods: {
                 init(w, h, n) {
@@ -374,17 +408,9 @@
                     return "btn";
                 },
                 restartBtnClickHandle(e) {
-                    if (e.buttons == 0 && this.mouse.buttons == 1) {
+                    if (this.mouse.buttons == 1) {
                         this.init(this.w, this.h, this.n);
                     }
-                },
-                restartBtnClass(x, y) {
-                    if (this.mouse.refName == "restart") {
-                        if (this.mouse.buttons == 1) {
-                            return "btn-hover";
-                        }
-                    }
-                    return "btn";
                 },
                 open(x, y) {
                     if (this.map[y][x].status == "OPEN") {
