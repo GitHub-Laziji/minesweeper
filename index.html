@@ -165,7 +165,8 @@
                             @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
                             @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
                             :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
-                            <icon-very-satisfied-face v-if="status=='WIN'"></icon-very-satisfied-face>
+                            <icon-ordinary-face v-if="mouse.refName=='restart'&&mouse.buttons==1"></icon-ordinary-face>
+                            <icon-very-satisfied-face v-else-if="status=='WIN'"></icon-very-satisfied-face>
                             <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
                             <icon-satisfied-face v-else></icon-satisfied-face>
                         </div>
@@ -520,7 +521,7 @@
             props: { size: String },
             template: `<svg viewBox="0 0 1024 1024" :width="size" :height="size"><path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15"></path><path d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815"></path><path d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815"></path><path d="M512.011 706.218c79.08 0 145.727-53.231 166.063-125.817 6.554-23.394-10.835-46.623-35.13-46.623H381.068c-23.959 0-41.692 22.74-35.337 45.841 20.075 72.985 86.917 126.599 166.28 126.599z" fill="#FFFFFF"></path></svg>`
         });
-        app.component("icon-very-ordinary-face", {
+        app.component("icon-ordinary-face", {
             props: { size: String },
             template: `<svg viewBox="0 0 1024 1024" :width="size" :height="size"><path d="M512 512m-388 0a388 388 0 1 0 776 0 388 388 0 1 0-776 0Z" fill="#FF7B15"></path><path d="M372.31 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815"></path><path d="M651.69 423.511m-52.511 0a52.511 52.511 0 1 0 105.022 0 52.511 52.511 0 1 0-105.022 0Z" fill="#231815"></path><path d="M587.864 612.998H436.136c-15.4 0-28-12.6-28-28s12.6-28 28-28h151.728c15.4 0 28 12.6 28 28s-12.6 28-28 28z" fill="#FFFFFF"></path></svg>`
         });
