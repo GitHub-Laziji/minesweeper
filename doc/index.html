@@ -10,8 +10,22 @@
             box-sizing: border-box;
         }
 
+        #app {
+            display: flex;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: #EEEEEE;
+        }
+
         .main {
             background: #CCCCCC;
+            border-left: 2px solid #FDFDFD;
+            border-top: 2px solid #FDFDFD;
+            border-right: 2px solid #727272;
+            border-bottom: 2px solid #727272;
             user-select: none;
         }
 
@@ -115,7 +129,7 @@
 </head>
 
 <body style="margin: 0;padding: 0;">
-    <div id="app" style="display: flex;">
+    <div id="app">
         <div class="main" style="padding: 5px;" @contextmenu.prevent="e=>e.preventDefault()">
             <div class="toolbar-border">
                 <div class="toolbar" :style="{'width':boardW+'px'}">
