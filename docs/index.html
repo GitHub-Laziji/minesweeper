@@ -16,10 +16,6 @@
             background: #EEEEEE;
         }
 
-        .hidden {
-            display: none !important;
-        }
-
         #app {
             display: flex;
             justify-content: center;
@@ -28,6 +24,11 @@
             height: 100vh;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
+        /* main */
         .main {
             background: #CCCCCC;
             border-left: 2px solid #FDFDFD;
@@ -88,8 +89,7 @@
             font-family: system-ui;
         }
 
-
-
+        /* digital */
         .digital-v {
             position: absolute;
             display: flex;
@@ -304,7 +304,7 @@
                         this.time++;
                     }
                 }, 1000);
-                this.init(16, 16, 99);
+                this.init(16, 16, 40);
             },
             methods: {
                 init(w, h, n) {
