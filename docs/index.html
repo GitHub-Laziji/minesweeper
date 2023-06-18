@@ -332,7 +332,7 @@
                     if (col.status == 'OPEN') {
                         return "btn-on";
                     }
-                    if (this.status == "RUNNING" && this.mouse.refName == "board") {
+                    if ((this.status == "INIT" || this.status == "RUNNING") && this.mouse.refName == "board") {
                         let mouseCol = this.map[this.mouse.refs.board.y][this.mouse.refs.board.x];
                         if (this.mouse.buttons == 1) {
                             if (col.x == mouseCol.x && col.y == mouseCol.y) {
