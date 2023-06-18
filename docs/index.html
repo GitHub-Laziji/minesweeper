@@ -279,7 +279,6 @@
                     let { x, y } = this.calcXY(e, "board");
                     this.mouse.refs[refName].x = x
                     this.mouse.refs[refName].y = y;
-                    this.mouse.buttons = e.buttons;
                 },
                 onMouseLeave(e, refName) {
                     this.mouse.refs[refName].x = null;
@@ -320,6 +319,7 @@
                         }
                     }
                     if (this.mouse.buttons == 3 && this.map[y][x].status == "OPEN" && this.map[y][x].aroundNum) {
+
                         let flagNum = 0;
                         this.aroundForeach(x, y, (cx, cy, c) => c.status == "FLAG" ? flagNum++ : null);
                         if (this.map[y][x].aroundNum == flagNum) {
