@@ -388,7 +388,7 @@
                     if (this.openNum == this.w * this.h - this.n) {
                         this.status = "WIN";
                         this.flagNum = this.n;
-                        if (this.time < this.scores[this.scoresKey()]) {
+                        if (this.scores[this.scoresKey()] === undefined || this.time < this.scores[this.scoresKey()]) {
                             this.scores[this.scoresKey()] = this.time;
                             localStorage.setItem("scores", JSON.stringify(this.scores));
                         }
