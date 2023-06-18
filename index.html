@@ -170,10 +170,11 @@
                             @mousemove="e=>onMouseMove(e,'restart')" @mouseleave="e=>onMouseLeave(e,'restart')"
                             @mouseup="e=>onMouseUp(e,'restart',()=>mouse.buttons==1?init(w,h,n):null)"
                             :class="mouse.refName=='restart'&&mouse.buttons==1?'btn-hover':'btn'">
-                            <icon-ordinary-face v-if="mouse.refName=='restart'&&mouse.buttons==1"></icon-ordinary-face>
-                            <icon-very-satisfied-face v-else-if="status=='WIN'"></icon-very-satisfied-face>
-                            <icon-dissatisfied-face v-else-if="status=='LOSE'"></icon-dissatisfied-face>
-                            <icon-satisfied-face v-else></icon-satisfied-face>
+                            <icon-ordinary-face v-if="mouse.refName=='restart'&&mouse.buttons==1"
+                                size="26"></icon-ordinary-face>
+                            <icon-very-satisfied-face v-else-if="status=='WIN'" size="26"></icon-very-satisfied-face>
+                            <icon-dissatisfied-face v-else-if="status=='LOSE'" size="26"></icon-dissatisfied-face>
+                            <icon-satisfied-face v-else size="26"></icon-satisfied-face>
                         </div>
                         <digital :width="14" :length="3" active-color="#ff0000" inactive-color="#ff000055"
                             background-color="#333333" :value="time">
