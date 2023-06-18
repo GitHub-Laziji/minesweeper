@@ -216,7 +216,7 @@
                     w: null,
                     h: null,
                     n: null,
-                    status: "RUNNING",
+                    status: "INIT",
                     time: 0,
                     flagNum: 0,
                     openNum: 0,
@@ -255,7 +255,7 @@
                     this.time = 0;
                     this.flagNum = 0;
                     this.openNum = 0;
-                    this.status = "RUNNING";
+                    this.status = "INIT";
                     this.map = [];
                     let random = [];
                     for (let i = 0; i < w * h; i++) {
@@ -296,6 +296,9 @@
                     }
                 },
                 boardBtnClickHandle(e) {
+                    if (this.status == "INIT") {
+                        this.status = "RUNNING";
+                    }
                     if (this.status != "RUNNING") {
                         return;
                     }
