@@ -136,8 +136,9 @@
 
 <body>
     <div id="app" class="hidden">
-        <div class="background" :style="{'width': 100/zoom+'vw','height': 100/zoom+'vh','zoom':zoom}">
-            <div class="main" @contextmenu.prevent="e=>e.preventDefault()">
+        <div class="background" :style="{'width': 100/zoom+'vw','height': 100/zoom+'vh','zoom':zoom}"
+            @contextmenu.prevent="e=>e.preventDefault()">
+            <div class="main">
                 <div class="border">
                     <div class="toolbar" :style="{'width':boardBtnWidth*w+'px'}">
                         <div ref="level0" style="width: 54px;height: 30px;" @mousedown="e=>onMouseDown(e,'level0')"
